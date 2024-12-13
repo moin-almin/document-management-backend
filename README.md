@@ -2,6 +2,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Postman API Public Link
+- [Postman](https://www.postman.com/gold-station-681337/workspace/document-management/request/13012694-cc86ee05-d574-43f6-af2b-d0bfdf00693d?action=share&creator=13012694&ctx=documentation)
+
 ## Project Initialization
 - Node.js version: 20.14.0
 - NestJS CLI version: 10.4.9
