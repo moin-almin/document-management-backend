@@ -6,6 +6,17 @@
 - Node.js version: 20.14.0
 - NestJS CLI version: 10.4.9
 
+## Installed Dependencies
+- @nestjs/typeorm, typeorm, pg: For database integration.
+- @nestjs/jwt, passport, passport-jwt: For authentication.
+- @nestjs/config, multer: For configuration and file uploads.
+
+## Environment Configuration
+- Added `.env` support using dotenv.
+- Sample environment variables:
+    - DATABASE_HOST, DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
+    - JWT_SECRET
+
 ## Project setup
 
 ```bash
