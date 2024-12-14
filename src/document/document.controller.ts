@@ -12,6 +12,8 @@ import { DocumentService } from './document.service';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { RoleEnum } from '../role/role.entity';
+import { UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('documents')
 @UseGuards(RolesGuard)
@@ -28,6 +30,14 @@ export class DocumentController {
       body.description,
       body.filePath,
     );
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  @Roles(RoleEnum.Admin, RoleEnum.Editor)
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    // Save file details (path) to the database
+    return { filePath: file.path };
   }
 
   @Get()
