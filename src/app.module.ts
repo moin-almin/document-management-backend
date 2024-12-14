@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { User } from './user/user.entity';
+import { UserModule } from './user/user.module';
+
 import { Role } from './role/role.entity';
 import { Document } from './document/document.entity';
 import { AuthModule } from './auth/auth.module';
@@ -31,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forFeature([User, Role, Document]),
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
