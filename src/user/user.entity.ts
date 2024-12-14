@@ -3,15 +3,15 @@ import { Role } from '../role/role.entity';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    username: string;
+  @Column()
+  username: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @ManyToOne(() => Role, (role) => role.users, { eager: true })
-    role: Role;
+  @ManyToOne(() => Role, (role) => role.users, { eager: true })
+  role: Role;
 }
