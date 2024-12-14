@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { RoleEnum } from '../role/role.entity';
@@ -16,7 +17,7 @@ import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('documents')
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class DocumentController {
   constructor(private documentService: DocumentService) {}
 
