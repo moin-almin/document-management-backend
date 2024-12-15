@@ -7,13 +7,15 @@ import {
   Param,
   Body,
   UseGuards,
+  Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { RoleEnum } from '../role/role.entity';
-import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -83,5 +85,14 @@ export class DocumentController {
   @Roles(RoleEnum.Admin) // Only Admins can delete
   deleteDocument(@Param('id') id: number) {
     return this.documentService.deleteDocument(id);
+  }
+
+  @Get('search')
+  @Roles(RoleEnum.Admin, RoleEnum.Editor, RoleEnum.Viewer) // All roles can search
+  searchDocuments(
+    @Query('query') query: string,
+    @Query('field') field: string = 'title', // Default search field is title
+  ) {
+    return this.documentService.searchDocuments(query, field);
   }
 }
