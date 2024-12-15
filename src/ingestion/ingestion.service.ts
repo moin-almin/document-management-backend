@@ -13,6 +13,9 @@ export class IngestionService {
     const response = await this.httpService
       .post(ingestionUrl, { documentId })
       .toPromise();
+
+    console.log(`Response from Python backend:`, response.data);
+
     return response.data;
   }
 
@@ -21,7 +24,12 @@ export class IngestionService {
       process.env.PYTHON_BACKEND_URL || 'http://localhost:8000';
     const statusUrl = `${pythonBackendUrl}/ingest/${documentId}/status`;
 
+    console.log(`Fetching status for document ID: ${documentId}`);
+    console.log(`Status URL: ${statusUrl}`);
+
     const response = await this.httpService.get(statusUrl).toPromise();
+
+    console.log(`Response from Python backend:`, response.data);
     return response.data;
   }
 }
