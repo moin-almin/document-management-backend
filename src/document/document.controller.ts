@@ -15,6 +15,8 @@ import { RolesGuard } from '../auth/roles.guard';
 import { RoleEnum } from '../role/role.entity';
 import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Controller('documents')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -34,11 +36,29 @@ export class DocumentController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads', // Save files in the "uploads" folder
+        filename: (req, file, callback) => {
+          const fileExtName = extname(file.originalname); // Extract the file extension
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          callback(null, `${randomName}${fileExtName}`); // Generate a random name with the extension
+        },
+      }),
+    }),
+  )
   @Roles(RoleEnum.Admin, RoleEnum.Editor)
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    // Save file details (path) to the database
-    return { filePath: file.path };
+    return {
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      filePath: file.path,
+    };
   }
 
   @Get()
