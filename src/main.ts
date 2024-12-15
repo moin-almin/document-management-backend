@@ -8,4 +8,5 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads'))); // Serve static files
   await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap();
