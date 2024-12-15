@@ -34,11 +34,15 @@ export class DocumentController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
   @Roles(RoleEnum.Admin, RoleEnum.Editor)
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    // Save file details (path) to the database
-    return { filePath: file.path };
+    return {
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      filePath: file.path,
+    };
   }
 
   @Get()
