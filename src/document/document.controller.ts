@@ -19,7 +19,10 @@ import { RoleEnum } from '../role/role.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('Documents')
+@ApiBearerAuth()
 @Controller('documents')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DocumentController {
@@ -88,6 +91,7 @@ export class DocumentController {
   }
 
   @Get('search')
+  @ApiOperation({ summary: 'Search documents' })
   @Roles(RoleEnum.Admin, RoleEnum.Editor, RoleEnum.Viewer) // All roles can search
   searchDocuments(
     @Query('query') query: string,
