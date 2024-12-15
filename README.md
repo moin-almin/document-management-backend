@@ -1,6 +1,6 @@
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository with extended functionality.
 
 ## Postman API Public Link
 - [Postman](https://www.postman.com/gold-station-681337/workspace/document-management/request/13012694-cc86ee05-d574-43f6-af2b-d0bfdf00693d?action=share&creator=13012694&ctx=documentation)
@@ -24,29 +24,41 @@ $ python app.py
 
 ## Project Initialization
 
-- Node.js version: 20.14.0
-- NestJS CLI version: 10.4.9
+- **Node.js version:** 20.14.0
+- **NestJS CLI version:** 10.4.9
 
 ## Installed Dependencies
 
-- @nestjs/typeorm, typeorm, pg: For database integration.
-- @nestjs/jwt, passport, passport-jwt: For authentication.
-- @nestjs/config, multer: For configuration and file uploads.
+- `@nestjs/typeorm`, `typeorm`, `pg`: For database integration.
+- `@nestjs/jwt`, `passport`, `passport-jwt`: For authentication.
+- `@nestjs/config`, `multer`: For configuration and file uploads.
 
 ## Environment Configuration
 
 - Added `.env` support using dotenv.
 - Sample environment variables:
-    - DATABASE_HOST, DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME
-    - JWT_SECRET
+    ```env
+    DATABASE_HOST=localhost
+    DATABASE_PORT=5432
+    DATABASE_USER=your_db_user
+    DATABASE_PASSWORD=your_db_password
+    DATABASE_NAME=document_management
+    JWT_SECRET=your_jwt_secret
+    PYTHON_BACKEND_URL=http://localhost:8000
+    ```
 
-## Project setup
+## Project Setup
 
 ```bash
+# Clone the repository
+$ git clone <repository-url>
+$ cd <repository-directory>
+
+# Install dependencies
 $ npm install
 ```
 
-## Compile and run the project
+## Compile and Run the Project
 
 ```bash
 # development
@@ -59,7 +71,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+## Testing the Project
 
 ```bash
 # unit tests
@@ -72,6 +84,32 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Stay in touch
+## Run the Python Backend (Optional for Testing)
 
-- Author - [Moin Almin](https://linkedin.com/alms)
+```bash
+# Navigate to Python backend directory
+$ cd python-backend
+
+# Activate virtual environment
+$ source python-backend-env/bin/activate
+
+# Start the Python server
+$ python app.py
+```
+
+## Troubleshooting
+
+### Database Connection Issues
+- Ensure PostgreSQL is running locally, and the credentials in the `.env` file are correct.
+- Manually create the database `document_management` if it doesn't exist.
+
+### Python Virtual Environment Issues
+- If the virtual environment is not working, ensure it's activated before running the Python server.
+- Reinstall dependencies using:
+  ```bash
+  pip install flask --force-reinstall
+  ```
+
+## Stay in Touch
+
+- **Author**: [Moin Almin](https://linkedin.com/alms)
