@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { Document } from './document.entity';
 
 @Injectable()
@@ -41,5 +41,11 @@ export class DocumentService {
 
   async deleteDocument(id: number): Promise<void> {
     await this.documentRepository.delete(id);
+  }
+
+  async searchDocuments(query: string, field: string): Promise<Document[]> {
+    const searchOptions = {};
+    searchOptions[field] = Like(`%${query}%`);
+    return this.documentRepository.find({ where: searchOptions });
   }
 }
