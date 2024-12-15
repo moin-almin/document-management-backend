@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Document } from './document.entity';
+import { DocumentNotFoundException } from '../exceptions/document-not-found.exception';
 
 @Injectable()
 export class DocumentService {
@@ -28,7 +29,11 @@ export class DocumentService {
   }
 
   async getDocumentById(id: number): Promise<Document> {
-    return this.documentRepository.findOne({ where: { id } });
+    const document = await this.documentRepository.findOne({ where: { id } });
+    if (!document) {
+      throw new DocumentNotFoundException(id);
+    }
+    return document;
   }
 
   async updateDocument(
