@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import { catchError, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class IngestionService {
@@ -10,13 +11,26 @@ export class IngestionService {
       process.env.PYTHON_BACKEND_URL || 'http://localhost:8000';
     const ingestionUrl = `${pythonBackendUrl}/ingest`;
 
-    const response = await this.httpService
-      .post(ingestionUrl, { documentId })
-      .toPromise();
+    try {
+      const response = await lastValueFrom(
+        this.httpService.post(ingestionUrl, { documentId }).pipe(
+          catchError((error) => {
+            throw new HttpException(
+              `Failed to trigger ingestion: ${error.message}`,
+              HttpStatus.BAD_GATEWAY,
+            );
+          }),
+        ),
+      );
 
-    console.log(`Response from Python backend:`, response.data);
-
-    return response.data;
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new HttpException(
+        `Unable to trigger ingestion for document ID ${documentId}.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async getIngestionStatus(documentId: number): Promise<any> {
@@ -24,12 +38,25 @@ export class IngestionService {
       process.env.PYTHON_BACKEND_URL || 'http://localhost:8000';
     const statusUrl = `${pythonBackendUrl}/ingest/${documentId}/status`;
 
-    console.log(`Fetching status for document ID: ${documentId}`);
-    console.log(`Status URL: ${statusUrl}`);
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get(statusUrl).pipe(
+          catchError((error) => {
+            throw new HttpException(
+              `Failed to fetch ingestion status: ${error.message}`,
+              HttpStatus.BAD_GATEWAY,
+            );
+          }),
+        ),
+      );
 
-    const response = await this.httpService.get(statusUrl).toPromise();
-
-    console.log(`Response from Python backend:`, response.data);
-    return response.data;
+      return response.data;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new HttpException(
+        `Unable to fetch ingestion status for document ID ${documentId}.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
