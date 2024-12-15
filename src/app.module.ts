@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { LoggingMiddleware } from './logging/logging.middleware';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +15,8 @@ import { DocumentModule } from './document/document.module';
 
 import { Role } from './role/role.entity';
 import { AuthModule } from './auth/auth.module';
+import { IngestionService } from './ingestion/ingestion.service';
+import { IngestionController } from './ingestion/ingestion.controller';
 
 @Module({
   imports: [
@@ -38,9 +41,10 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     UserModule,
     DocumentModule,
+    HttpModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, IngestionController],
+  providers: [AppService, IngestionService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
