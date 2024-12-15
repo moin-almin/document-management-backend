@@ -29,40 +29,36 @@ export class DocumentController {
   constructor(private documentService: DocumentService) {}
 
   @Post()
-  @Roles(RoleEnum.Admin, RoleEnum.Editor) // Only Admins and Editors can create
-  createDocument(
-    @Body() body: { title: string; description: string; filePath: string },
-  ) {
-    return this.documentService.createDocument(
-      body.title,
-      body.description,
-      body.filePath,
-    );
-  }
-
-  @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
         destination: './uploads', // Save files in the "uploads" folder
         filename: (req, file, callback) => {
-          const fileExtName = extname(file.originalname); // Extract the file extension
+          const fileExtName = extname(file.originalname); // Extract file extension
           const randomName = Array(32)
             .fill(null)
             .map(() => Math.round(Math.random() * 16).toString(16))
             .join('');
-          callback(null, `${randomName}${fileExtName}`); // Generate a random name with the extension
+          callback(null, `${randomName}${fileExtName}`); // Generate random name with extension
         },
       }),
     }),
   )
-  @Roles(RoleEnum.Admin, RoleEnum.Editor)
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  @Roles(RoleEnum.Admin, RoleEnum.Editor) // Restrict to Admins and Editors
+  async uploadAndCreateDocument(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: { title: string; description: string },
+  ) {
+    // Save document metadata to the database
+    const newDocument = await this.documentService.createDocument(
+      body.title,
+      body.description,
+      file.path,
+    );
+
     return {
-      originalName: file.originalname,
-      mimeType: file.mimetype,
-      size: file.size,
-      filePath: file.path,
+      message: 'File uploaded and document created successfully',
+      document: newDocument,
     };
   }
 
