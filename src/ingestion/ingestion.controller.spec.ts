@@ -32,7 +32,9 @@ describe('IngestionController', () => {
   // Example Test Case
   it('should call triggerIngestion method', async () => {
     const mockResponse = { message: 'Ingestion started' };
-    jest.spyOn(ingestionService, 'triggerIngestion').mockResolvedValue(mockResponse);
+    jest
+      .spyOn(ingestionService, 'triggerIngestion')
+      .mockResolvedValue(mockResponse);
 
     const result = await controller.triggerIngestion(1);
     expect(ingestionService.triggerIngestion).toHaveBeenCalledWith(1);
