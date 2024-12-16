@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
 import { User } from '../user/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
+import { RoleEnum } from '../role/role.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -49,7 +50,7 @@ describe('AuthService', () => {
       id: 1,
       username: 'testuser',
       password: 'hashedPassword',
-      role: { name: 'Admin' },
+      role: RoleEnum.Admin,
     };
     jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUser as User);
     jest
@@ -63,7 +64,7 @@ describe('AuthService', () => {
       {
         username: 'testuser',
         sub: 1,
-        role: 'Admin',
+        role: RoleEnum.Admin,
       },
       { expiresIn: '1h' },
     );
