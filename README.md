@@ -1,115 +1,267 @@
-## Description
+# Document Management Backend
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository with extended functionality.
+This is a **NestJS** backend application for managing users, documents, and ingestion processes. It includes authentication, role-based authorization, CRUD operations for documents, and ingestion management APIs.
 
-## Postman API Public Link
-- [Postman](https://www.postman.com/gold-station-681337/workspace/document-management/request/13012694-cc86ee05-d574-43f6-af2b-d0bfdf00693d?action=share&creator=13012694&ctx=documentation)
+---
 
-## Python Backend Simulation
-1. Navigate to the `python-backend` directory.
-2. Activate the virtual environment: `source python-backend-env/bin/activate`
-3. Start the Flask server: `python app.py`
-4. Flask app runs on `http://localhost:8000`.
+## Features
 
-```bash
-# start venv
-$ python-backend-env\Scripts\Activate
+- **Authentication**:
+  - User registration
+  - Login with JWT token generation
+  - Logout functionality
+  - Token expiration handling
+- **User Management** (Admin-only):
+  - Role management (Admin, Editor, Viewer)
+  - List all users with pagination
+  - Update user roles
+  - Delete users
+- **Document Management**:
+  - CRUD operations for documents
+- **Ingestion Management**:
+  - Trigger ingestion processes via Python backend
+  - Track ingestion statuses
 
-# change directory
-$ cd .\python-backend\
+---
 
-# start server on 8000
-$ python app.py
-```
+## Tech Stack
 
-## Project Initialization
+- **Framework**: [NestJS](https://nestjs.com/)
+- **Database**: PostgreSQL (TypeORM for ORM)
+- **Authentication**: JWT with role-based authorization
+- **Containerization**: Docker and Docker Compose
+- **Documentation**: Swagger UI
 
-- **Node.js version:** 20.14.0
-- **NestJS CLI version:** 10.4.9
+---
 
-## Installed Dependencies
+## Getting Started
 
-- `@nestjs/typeorm`, `typeorm`, `pg`: For database integration.
-- `@nestjs/jwt`, `passport`, `passport-jwt`: For authentication.
-- `@nestjs/config`, `multer`: For configuration and file uploads.
+### Prerequisites
 
-## Environment Configuration
+- [Node.js](https://nodejs.org/) (v16 or later)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/) (optional for containerized deployment)
 
-- Added `.env` support using dotenv.
-- Sample environment variables:
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/moin-almin/document-management-backend.git
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure environment variables:
+  - Create a `.env` file in the root directory based on `.env.example` and fill in the required variables:
     ```env
     DATABASE_HOST=localhost
     DATABASE_PORT=5432
-    DATABASE_USER=your_db_user
-    DATABASE_PASSWORD=your_db_password
+    DATABASE_USER=postgres
+    DATABASE_PASSWORD=postgres
     DATABASE_NAME=document_management
     JWT_SECRET=your_jwt_secret
     PYTHON_BACKEND_URL=http://localhost:8000
     ```
 
-## Project Setup
+4. Start the server:
+   ```bash
+   npm run start:dev
+   ```
 
-```bash
-# Clone the repository
-$ git clone <repository-url>
-$ cd <repository-directory>
+---
 
-# Install dependencies
-$ npm install
+## Running the Application
+
+### APIs
+
+Swagger documentation is available at:
+```
+http://localhost:3000/api
 ```
 
-## Compile and Run the Project
+### Key Endpoints
 
-```bash
-# development
-$ npm run start
+#### Authentication
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Testing the Project
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Run the Python Backend (Optional for Testing)
-
-```bash
-# Navigate to Python backend directory
-$ cd python-backend
-
-# Activate virtual environment
-$ source python-backend-env/bin/activate
-
-# Start the Python server
-$ python app.py
-```
-
-## Troubleshooting
-
-### Database Connection Issues
-- Ensure PostgreSQL is running locally, and the credentials in the `.env` file are correct.
-- Manually create the database `document_management` if it doesn't exist.
-
-### Python Virtual Environment Issues
-- If the virtual environment is not working, ensure it's activated before running the Python server.
-- Reinstall dependencies using:
-  ```bash
-  pip install flask --force-reinstall
+- **Register**:
+  ```http
+  POST /auth/register
+  ```
+  ```json
+  {
+    "username": "admin",
+    "password": "password"
+  }
   ```
 
-## Stay in Touch
+- **Login**:
+  ```http
+  POST /auth/login
+  ```
+  ```json
+  {
+    "username": "admin",
+    "password": "password"
+  }
+  ```
 
-- **Author**: [Moin Almin](https://linkedin.com/alms)
+- **Logout**:
+  ```http
+  POST /auth/logout
+  ```
+
+#### User Management (Admin-only)
+
+- **List Users**:
+  ```http
+  GET /users?page=1&limit=10
+  ```
+
+- **Update User Role**:
+  ```http
+  PATCH /users/:id/role
+  ```
+  ```json
+  {
+    "role": "Editor"
+  }
+  ```
+
+- **Delete User**:
+  ```http
+  DELETE /users/:id
+  ```
+
+#### Document Management
+
+- **List Documents**:
+  ```http
+  GET /documents?page=1&limit=10&title=example
+  ```
+
+- **Upload Document**:
+  ```http
+  POST /documents/upload
+  ```
+  Use `multipart/form-data` to upload a file.
+
+- **Delete Document**:
+  ```http
+  DELETE /documents/:id
+  ```
+
+#### Ingestion Management
+
+- **Trigger Ingestion**:
+  ```http
+  POST /ingestion/:documentId/trigger
+  ```
+
+- **Get Ingestion Status**:
+  ```http
+  GET /ingestion/:documentId/status
+  ```
+
+---
+
+## Testing
+
+### Run Unit Tests
+```bash
+npm run test
+```
+
+### Run E2E Tests
+```bash
+npm run test:e2e
+```
+
+### Generate Test Coverage Report
+```bash
+npm run test:cov
+```
+
+---
+
+## Deployment
+
+### Local Deployment with Docker Compose
+
+1. Ensure Docker and Docker Compose are installed.
+2. Create a `.env` file as shown in the **Installation** section.
+3. Use the following `docker-compose.yml` file:
+   ```yaml
+   version: '3.8'
+
+   services:
+     app:
+       build: .
+       ports:
+         - "3000:3000"
+       environment:
+         DATABASE_HOST: db
+         DATABASE_PORT: 5432
+         DATABASE_USER: postgres
+         DATABASE_PASSWORD: postgres
+         DATABASE_NAME: document_management
+         JWT_SECRET: your_jwt_secret
+         PYTHON_BACKEND_URL: http://python_backend:8000
+       depends_on:
+         - db
+         - python_backend
+       volumes:
+         - ./uploads:/app/uploads
+
+     db:
+       image: postgres:14
+       environment:
+         POSTGRES_USER: postgres
+         POSTGRES_PASSWORD: postgres
+         POSTGRES_DB: document_management
+       ports:
+         - "5432:5432"
+       volumes:
+         - pgdata:/var/lib/postgresql/data
+
+     python_backend:
+       build: ./python-backend
+       ports:
+         - "8000:8000"
+
+   volumes:
+     pgdata:
+   ```
+
+4. Build and start the services:
+   ```bash
+   docker-compose up --build
+   ```
+
+5. Access the application:
+  - **NestJS App**: [http://localhost:3000](http://localhost:3000)
+  - **Swagger Docs**: [http://localhost:3000/api](http://localhost:3000/api)
+  - **Python Backend**: [http://localhost:8000](http://localhost:8000)
+
+---
+
+### Additional Notes
+
+- **Environment Variables**:
+  - Use `.env` for local development.
+  - Use environment variables for production secrets in cloud deployments.
+
+- **Health Checks**:
+  - Add health check endpoints for Docker or cloud-based monitoring.
+
+---
+
+## Authors
+
+- **Moin Almin** – [LinkedIn](https://www.linkedin.com/in/alms/)
+
+---
+
+Feel free to reach out for any issues or contributions!
