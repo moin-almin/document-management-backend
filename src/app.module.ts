@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { LoggingMiddleware } from './logging/logging.middleware';
+import { JwtStrategy } from './auth/jwt.strategy';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -22,6 +23,7 @@ import { IngestionController } from './ingestion/ingestion.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -44,7 +46,7 @@ import { IngestionController } from './ingestion/ingestion.controller';
     HttpModule,
   ],
   controllers: [AppController, IngestionController],
-  providers: [AppService, IngestionService],
+  providers: [AppService, IngestionService, JwtStrategy],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -42,7 +42,10 @@ export class UserController {
   @Patch(':id/role')
   @ApiOperation({ summary: 'Update user role (Admin-only)' })
   @Roles(RoleEnum.Admin) // Admin-only
-  async updateUserRole(@Param('id') id: number, @Body('role') role: RoleEnum) {
-    return this.userService.updateUserRole(id, role);
+  async updateUserRole(
+    @Param('id') id: number,
+    @Body('roleName') roleName: RoleEnum,
+  ) {
+    return this.userService.updateUserRole(id, roleName);
   }
 }
