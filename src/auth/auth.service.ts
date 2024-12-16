@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -27,20 +27,27 @@ export class AuthService {
   ): Promise<{ accessToken: string }> {
     const user = await this.userRepository.findOne({
       where: { username },
-      relations: ['role'], // Ensure role is included
+      relations: ['role'],
     });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = {
       username: user.username,
       sub: user.id,
       role: user.role.name,
-    }; // Add role to payload
-    const accessToken = this.jwtService.sign(payload);
+    };
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: '1h', // Set token expiration to 1 hour
+    });
 
     return { accessToken };
+  }
+
+  async logout(): Promise<{ message: string }> {
+    // Implement token invalidation logic if using a blacklist.
+    return { message: 'Logout successful' };
   }
 }
