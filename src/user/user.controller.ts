@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Delete,
-  Patch,
-  Param,
-  Query,
   Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { Roles } from '../auth/roles.decorator';
@@ -13,7 +13,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.gaurd';
 import { RoleEnum } from '../role/role.entity';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User Management')
 @ApiBearerAuth()

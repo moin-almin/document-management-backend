@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Document } from './document.entity';
 import { DocumentNotFoundException } from '../exceptions/document-not-found.exception';
 
