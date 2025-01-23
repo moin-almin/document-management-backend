@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: Mordor@5679
+      DATABASE_NAME: document_management
+      JWT_SECRET: your_jwt_secret
+      PYTHON_BACKEND_URL: http://python_backend:8000
+    depends_on:
+      - db
+      - python_backend
+    volumes:
+      - ./uploads:/app/uploads # Persist uploaded files
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Mordor@5679
+      POSTGRES_DB: document_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Persist database data
+
+  python_backend:
+    build: ./python-backend
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
